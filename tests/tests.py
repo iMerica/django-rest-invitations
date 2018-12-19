@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core import mail
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 from invitations.utils import get_invitation_model
@@ -113,6 +114,39 @@ class TestInvitationAPI(APITestCase):
         self.assertTrue(invitation.accepted)
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_410_GONE)
+
+
+@override_settings(INVITATION_OUTBOUND_REDIRECT_ENABLED=True,
+                   INVITATION_ACCEPT_INVITE_OUTBOUND_REDIRECT='http://foobar.com/')
+class TestRedirect(APITestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestRedirect, cls).setUpClass()
+        cls.user = User.objects.create_user(
+            email='user@example.org', username='test_user', password='test'
+        )
+
+    def test_invitation_accept_redirect(self):
+        invitation = Invitation.create(
+            email='invited@email.org',
+            inviter=self.user
+        )
+        invitation_pk = invitation.pk
+        invitation.sent = timezone.now()
+        invitation.save()
+        url = reverse('invitations:accept-invite', kwargs={'key': 'something'})
+        data = {}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_410_GONE)
+        self.assertFalse(invitation.accepted)
+        url = reverse(
+            'invitations:accept-invite',
+            kwargs={'key': invitation.key}
+        )
+        response = self.client.post(url, data, format='json', follow=True)
+        self.assertEqual(response.status_code, 301)
+        invitation = Invitation.objects.get(pk=invitation_pk)
+        self.assertTrue(invitation.accepted)
 
     def tearDown(self):
         self.client.logout()

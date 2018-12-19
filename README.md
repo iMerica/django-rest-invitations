@@ -69,6 +69,13 @@ url(r'^', include('rest_invitations.urls'))
 
     String. Set up url for accept_invitation endpoint
 
+*   `INVITATION_OUTBOUND_REDIRECT_ENABLED` (default=False)
+    Bool. Whether or not to redirect somewhere else after successfully accepting the invite.
+    Useful in a situation where the frontend is a Single Page Application and the backend is 
+    Django Rest Framework.
+    
+*   `INVITATION_ACCEPT_INVITE_OUTBOUND_REDIRECT` (default='')
+    URL string. The outbound URL where your frontend can display something like "Invite Accepted"
 
 ### APIs (examples with default values)
 

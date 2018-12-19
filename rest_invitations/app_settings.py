@@ -49,5 +49,9 @@ SEND_MULTIPLE_URL = getattr(
     settings, 'INVITATION_SEND_MULTIPLE_URL', 'send-multiple'
 )
 
+OUTBOUND_REDIRECT_ENABLED = getattr(settings, 'INVITATION_OUTBOUND_REDIRECT_ENABLED', False)
+
+ACCEPT_INVITE_OUTBOUND_REDIRECT = getattr(settings, 'INVITATION_ACCEPT_INVITE_OUTBOUND_REDIRECT', '')
+
 # Get Invitation model
 InvitationModel = get_invitation_model()

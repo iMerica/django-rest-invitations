@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.shortcuts import redirect
 from invitations.adapters import get_invitations_adapter
 from invitations.app_settings import app_settings as invitations_settings
 from invitations.signals import invite_accepted
@@ -8,7 +9,9 @@ from rest_framework.decorators import (api_view, detail_route, list_route,
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .app_settings import (CREATE_AND_SEND_URL, SEND_MULTIPLE_URL, SEND_URL,
+from .app_settings import (ACCEPT_INVITE_OUTBOUND_REDIRECT,
+                           CREATE_AND_SEND_URL, OUTBOUND_REDIRECT_ENABLED,
+                           SEND_MULTIPLE_URL, SEND_URL,
                            InvitationBulkWriteSerializer, InvitationModel,
                            InvitationReadSerializer, InvitationWriteSerializer)
 
@@ -144,6 +147,10 @@ def accept_invitation(request, key):
                 'account_verified_email': invitation.email
             }
         )
+
+    if OUTBOUND_REDIRECT_ENABLED:
+        return redirect(ACCEPT_INVITE_OUTBOUND_REDIRECT)
+
     return Response(
         signup_data,
         status=status.HTTP_200_OK
