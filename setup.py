@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='rest-invitations',
+    name='rest_invitations',
     version='0.1.1',
     author='Marco Federighi',
     author_email='federighi.marco@gmail.com',
