@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='django-rest-invitations',
+    name='rest-invitations',
     version='0.1.1',
     author='Marco Federighi',
     author_email='federighi.marco@gmail.com',
-    url='http://github.com/fmarco/django-rest-invitations',
+    url='https://github.com/iMerica/django-rest-invitations/',
     description='Create a set of REST API endpoints to handle invitations',
     packages=find_packages(),
     keywords=['django', 'invitation', 'django-allauth', 'invite', 'rest', 'django-rest-framework', 'drf', 'invitations'],
